@@ -6,33 +6,44 @@ import { WorldMap } from "./world-map";
 import { BuilderSearch } from "./builder-search";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { DashboardStats } from "@/lib/types";
-import { Globe } from "lucide-react";
-import Image from "next/image";
+import { Globe, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface MainDashboardProps {
     stats: DashboardStats;
+    regionFilter?: string;
 }
 
-export function MainDashboard({ stats }: MainDashboardProps) {
+export function MainDashboard({ stats, regionFilter }: MainDashboardProps) {
     return (
         <div className="min-h-screen">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
+                        {regionFilter && (
+                            <Link
+                                href="/"
+                                className="p-2 rounded-lg hover:bg-[var(--muted)] transition-colors"
+                            >
+                                <ArrowLeft className="w-5 h-5" />
+                            </Link>
+                        )}
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
                             <Globe className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold">Superteam Global</h1>
+                            <h1 className="text-xl font-bold">
+                                {regionFilter ? `Builders in ${regionFilter}` : "Superteam Global"}
+                            </h1>
                             <p className="text-xs text-[var(--muted-foreground)]">
-                                Builder Dashboard
+                                {regionFilter ? "Regional View" : "Builder Dashboard"}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">
-                            {stats.totalBuilders.toLocaleString()} builders worldwide
+                            {stats.totalBuilders.toLocaleString()} builders {regionFilter ? `in ${regionFilter}` : "worldwide"}
                         </span>
                         <ThemeToggle />
                     </div>

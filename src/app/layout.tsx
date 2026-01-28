@@ -9,10 +9,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Superteam Global Builder Dashboard",
+  title: "Discover the Global Builder Layer of Solana",
   description: "Visualize, rank, and celebrate Solana builders across the globe",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/images/logo.png",
   },
   keywords: [
     "Superteam",

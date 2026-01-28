@@ -1,8 +1,5 @@
-import { MainDashboard } from "@/components/dashboard/main-dashboard";
-import { loadDashboardData } from "@/lib/data";
+import { LandingPage } from "@/components/landing-page";
 
 export default function HomePage() {
-  const stats = loadDashboardData();
-
-  return <MainDashboard stats={stats} />;
+  return <LandingPage />;
 }
