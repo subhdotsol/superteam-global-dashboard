@@ -2,11 +2,48 @@
 
 import { useDashboard } from "./dashboard-state-provider";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Globe, Github, Twitter, Linkedin, Copy } from "lucide-react";
+import { X, Globe, Github, Twitter, Linkedin, Copy, Check } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 export function ProfileDrawer() {
     const { selectedMember, selectMember } = useDashboard();
+    const [copied, setCopied] = useState(false);
+
+    const copyWallet = () => {
+        if (!selectedMember?.wallet) return;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(selectedMember.wallet)
+                .then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                })
+                .catch((err) => {
+                    console.error('Clipboard write failed:', err);
+                    fallbackCopy(selectedMember.wallet);
+                });
+        } else {
+            fallbackCopy(selectedMember.wallet);
+        }
+    };
+
+    const fallbackCopy = (text: string) => {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+        }
+        document.body.removeChild(textArea);
+    };
 
     // AnimatePresence needs to always render to detect exit
     return (
@@ -117,13 +154,20 @@ export function ProfileDrawer() {
                                             )}
                                         </div>
 
-                                        {/* Wallet Address - Separate Line */}
+                                        {/* Wallet Address - Clickable to Copy */}
                                         <div className="mb-8">
-                                            <div className="inline-flex items-center gap-3 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-zinc-300 font-mono text-sm border border-zinc-200 dark:border-zinc-700">
+                                            <button
+                                                onClick={copyWallet}
+                                                className="inline-flex items-center gap-3 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-zinc-300 font-mono text-sm border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                                            >
                                                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                                                 {selectedMember.wallet}
-                                                <Copy className="w-4 h-4 cursor-pointer hover:text-black dark:hover:text-white ml-2" />
-                                            </div>
+                                                {copied ? (
+                                                    <Check className="w-4 h-4 text-green-500 ml-2" />
+                                                ) : (
+                                                    <Copy className="w-4 h-4 ml-2" />
+                                                )}
+                                            </button>
                                         </div>
 
                                         {/* Skills */}

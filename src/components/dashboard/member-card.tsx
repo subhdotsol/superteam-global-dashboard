@@ -3,7 +3,8 @@
 import { Builder } from "@/lib/types";
 import { useDashboard } from "./dashboard-state-provider";
 import Image from "next/image";
-import { MapPin, DollarSign, Trophy, FileText } from "lucide-react";
+import { Copy, Check } from "lucide-react";
+import { useState } from "react";
 
 interface MemberCardProps {
     member: Builder;
@@ -11,9 +12,53 @@ interface MemberCardProps {
 
 export function MemberCard({ member }: MemberCardProps) {
     const { selectMember } = useDashboard();
+    const [copied, setCopied] = useState(false);
 
-    // Generate a consistent gradient based on the name/wallet if no custom background
-    // For now we'll just use a nice default gradient as seen in the design
+    const copyToClipboard = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!member.wallet) return;
+
+        // Use the clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(member.wallet)
+                .then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                })
+                .catch((err) => {
+                    console.error('Clipboard write failed:', err);
+                    // Fallback for older browsers
+                    fallbackCopy(member.wallet);
+                });
+        } else {
+            // Fallback for older browsers
+            fallbackCopy(member.wallet);
+        }
+    };
+
+    const fallbackCopy = (text: string) => {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+        }
+        document.body.removeChild(textArea);
+    };
+
+    // Truncate wallet address for display
+    const truncatedWallet = member.wallet
+        ? `${member.wallet.slice(0, 4)}...${member.wallet.slice(-4)}`
+        : null;
 
     return (
         <div className="bg-black/20 backdrop-blur-md rounded-3xl overflow-hidden shadow-lg border border-white/10 flex flex-col h-[400px] text-white">
@@ -51,13 +96,28 @@ export function MemberCard({ member }: MemberCardProps) {
                 </div>
 
                 {/* Info */}
-                <div className="mb-4">
+                <div className="mb-2">
                     <h3 className="font-bold text-lg text-white leading-tight">{member.title}</h3>
                     <p className="text-sm text-zinc-300">{member.role || "Member"}</p>
                 </div>
 
+                {/* Wallet/Public Key - Clickable to copy */}
+                {truncatedWallet && (
+                    <button
+                        onClick={copyToClipboard}
+                        className="flex items-center gap-2 px-3 py-1.5 mb-4 rounded-lg bg-zinc-800/50 hover:bg-zinc-700/50 transition-colors text-xs text-zinc-300 w-fit group"
+                    >
+                        <span className="font-mono">{truncatedWallet}</span>
+                        {copied ? (
+                            <Check className="w-3.5 h-3.5 text-green-400" />
+                        ) : (
+                            <Copy className="w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-colors" />
+                        )}
+                    </button>
+                )}
+
                 {/* Stats Row - Earned, Submissions, Won */}
-                <div className="grid grid-cols-3 gap-2 mb-6">
+                <div className="grid grid-cols-3 gap-2 mb-4">
                     <div className="flex flex-col">
                         <div className="flex items-center gap-1 text-green-400 mb-0.5">
                             <span className="text-xs font-bold">$ {member.earned?.toLocaleString() || "0"}</span>
