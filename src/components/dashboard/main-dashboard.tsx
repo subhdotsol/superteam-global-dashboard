@@ -5,7 +5,7 @@ import { OverviewLayout } from "./overview-layout";
 import { CountryView } from "./country-view";
 import { ProfileDrawer } from "./profile-drawer";
 import { DashboardStats } from "@/lib/types";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
@@ -33,8 +33,8 @@ function DashboardShell({ stats }: { stats: DashboardStats }) {
                     priority
                     placeholder="blur"
                 />
-                {/* Optional overlay for better text readability if needed, but per request just the image for now */}
-                <div className="absolute inset-0 bg-black/50" />
+                {/* Subtle overlay for readability */}
+                <div className="absolute inset-0 bg-black/20" />
             </div>
 
             {/* Content Container */}
@@ -48,16 +48,16 @@ function DashboardShell({ stats }: { stats: DashboardStats }) {
                             </div>
                         </Link>
 
-                        <div className="flex items-center gap-4">
-                            <ThemeToggle />
-                        </div>
+
                     </div>
 
                     {/* Data Disclaimer Banner - Pill Style */}
                     <div className="w-full flex justify-center animate-slide-up">
-                        <div className="bg-gradient-to-r from-[#9d5cff] via-[#d667ae] to-[#ff8c7f] text-black px-5 py-2 rounded-full font-semibold shadow-lg flex items-center gap-2 text-sm">
+                        <div className="bg-gradient-to-r from-[#9d5cff] via-[#d667ae] to-[#ff8c7f] text-black px-5 py-2 rounded-full font-semibold shadow-lg flex items-center gap-3 text-sm">
                             <span>✨</span>
-                            <span>$10.5M seed round raised</span>
+                            <span>Real: Name, Region & Wallet</span>
+                            <span className="opacity-50">•</span>
+                            <span>Demo: Earnings, Submissions & Won</span>
                         </div>
                     </div>
                 </header>

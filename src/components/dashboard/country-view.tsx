@@ -28,7 +28,7 @@ export function CountryView() {
         });
 
     return (
-        <div className="w-full h-full flex flex-col animate-fade-in bg-black/40 backdrop-blur-sm rounded-[2rem] border border-white/20 overflow-hidden relative p-8 max-w-[1600px] mx-auto text-white">
+        <div className="w-full h-full flex flex-col animate-fade-in bg-zinc-950 rounded-[2rem] border border-white/20 overflow-hidden relative p-8 max-w-[1600px] mx-auto text-white">
             {/* Close Button */}
             <button
                 onClick={goBackToOverview}
