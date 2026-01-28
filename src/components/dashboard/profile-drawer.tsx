@@ -25,6 +25,7 @@ export function ProfileDrawer() {
 
                     {/* Drawer */}
                     <motion.div
+                        key="profile-drawer"
                         initial={{ y: "100%" }}
                         animate={{ y: 0 }}
                         exit={{ y: "100%" }}

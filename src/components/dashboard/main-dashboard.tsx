@@ -65,7 +65,7 @@ function DashboardShell({ stats }: { stats: DashboardStats }) {
                     </div>
                 </header>
 
-                <main className="max-w-[1600px] mx-auto w-full h-full relative">
+                <main className="w-full h-full relative flex-1 px-4">
                     {currentView === "overview" ? (
                         <OverviewLayout countries={stats.countries} />
                     ) : (

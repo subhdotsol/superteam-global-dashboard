@@ -77,12 +77,12 @@ export function OverviewLayout({ countries, defaultCenter }: OverviewLayoutProps
             </div>
 
             {/* Right Panel: Map - Glassmorphism and full height */}
-            <div className="lg:col-span-2 bg-black/20 backdrop-blur-md rounded-[2rem] border-4 border-white/10 p-2 overflow-hidden flex flex-col relative text-white">
+            <div className="lg:col-span-2 bg-black/20 backdrop-blur-md rounded-[2rem] border-4 border-white/10 p-0 overflow-hidden flex flex-col relative text-white">
                 <div className="absolute top-6 left-0 right-0 text-center z-10 pointer-events-none">
                     <h2 className="text-3xl font-bold font-handwriting text-white drop-shadow-md">map</h2>
                 </div>
 
-                <div className="flex-1 rounded-[1.5rem] overflow-hidden relative">
+                <div className="flex-1 overflow-hidden relative">
                     <WorldMap countries={countries} center={defaultCenter} />
                 </div>
             </div>

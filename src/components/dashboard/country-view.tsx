@@ -6,6 +6,7 @@ import { ArrowLeft, Search, ChevronDown, X, Check } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
 export function CountryView() {
     const { selectedCountry, goBackToOverview } = useDashboard();
@@ -19,6 +20,7 @@ export function CountryView() {
     const filteredBuilders = selectedCountry.builders
         .filter(b => b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             b.role?.toLowerCase().includes(searchQuery.toLowerCase()))
+        // Removing the bad import line if it exists here by replacing the context around it with clean code
         .sort((a, b) => {
             if (activeFilter === "earned") return (b.earned || 0) - (a.earned || 0);
             if (activeFilter === "submission") return (b.submissions || 0) - (a.submissions || 0);
@@ -27,7 +29,7 @@ export function CountryView() {
         });
 
     return (
-        <div className="w-full h-full flex flex-col animate-fade-in bg-white dark:bg-zinc-950 rounded-[2rem] border-4 border-black dark:border-zinc-800 overflow-hidden relative p-8">
+        <div className="w-full h-full flex flex-col animate-fade-in bg-white dark:bg-zinc-950 rounded-[2rem] border-4 border-black dark:border-zinc-800 overflow-hidden relative p-8 max-w-[1600px] mx-auto">
             {/* Close Button */}
             <button
                 onClick={goBackToOverview}
@@ -56,14 +58,14 @@ export function CountryView() {
                 {/* Search */}
                 <div className="flex-1 relative">
                     <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                        <Search className="w-5 h-5" />
+                        <Search className="w-5 h-5 text-zinc-400" />
                     </div>
                     <input
                         type="text"
                         placeholder="search members"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-black font-handwriting text-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-zinc-600 bg-transparent text-black dark:text-white placeholder:text-zinc-500 font-handwriting text-lg focus:outline-none focus:ring-2 focus:ring-zinc-400"
                     />
                 </div>
 
@@ -71,25 +73,25 @@ export function CountryView() {
                 <div className="relative">
                     <button
                         onClick={() => setIsFilterOpen(true)}
-                        className="px-6 py-3 rounded-xl border-2 border-black font-handwriting text-lg flex items-center gap-2 hover:bg-zinc-50 bg-white"
+                        className="px-6 py-3 rounded-xl border-2 border-black bg-transparent font-handwriting text-lg flex items-center gap-2 hover:bg-zinc-50/10 text-zinc-500"
                     >
-                        Filters <ChevronDown className="w-5 h-5" />
+                        Filters <ChevronDown className="w-5 h-5 text-zinc-500" />
                     </button>
 
-                    {/* Filter Modal (Centered) */}
+                    {/* Filter Modal (Portal to body to escape overflow/transform) */}
                     <AnimatePresence>
-                        {isFilterOpen && (
+                        {isFilterOpen && typeof document !== "undefined" && createPortal(
                             <>
                                 <motion.div
                                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                    className="fixed inset-0 bg-black/20 backdrop-blur-sm z-20"
+                                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
                                     onClick={() => setIsFilterOpen(false)}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9, y: "-50%", x: "-50%" }}
                                     animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}
                                     exit={{ opacity: 0, scale: 0.9, y: "-50%", x: "-50%" }}
-                                    className="fixed top-1/2 left-1/2 z-30 bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-xl border-2 border-black w-80 max-w-full"
+                                    className="fixed top-1/2 left-1/2 z-[101] bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-xl border-2 border-black w-80 max-w-full"
                                 >
                                     <h3 className="font-bold text-xl mb-4 text-center">Sort By</h3>
                                     <div className="space-y-2">
@@ -105,8 +107,8 @@ export function CountryView() {
                                                     setIsFilterOpen(false);
                                                 }}
                                                 className={`w-full p-3 rounded-xl border-2 flex items-center justify-between transition-all ${activeFilter === opt.id
-                                                        ? 'border-black bg-zinc-100 dark:border-white dark:bg-zinc-800 font-bold'
-                                                        : 'border-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800'
+                                                    ? 'border-black bg-zinc-100 dark:border-white dark:bg-zinc-800 font-bold'
+                                                    : 'border-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800'
                                                     }`}
                                             >
                                                 {opt.label}
@@ -121,7 +123,8 @@ export function CountryView() {
                                         </button>
                                     </div>
                                 </motion.div>
-                            </>
+                            </>,
+                            document.body
                         )}
                     </AnimatePresence>
                 </div>
