@@ -19,22 +19,13 @@ const MapComponentWithNoSSR = dynamic(
 
 interface WorldMapProps {
     countries: CountryStats[];
+    center?: [number, number];
 }
 
-export function WorldMap({ countries }: WorldMapProps) {
+export function WorldMap({ countries, center }: WorldMapProps) {
     return (
-        <Card className="border border-[var(--border)]">
-            <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                    <Map className="w-5 h-5 text-blue-500" />
-                    Global Builder Distribution
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-                <div className="h-[400px] w-full rounded-b-xl overflow-hidden">
-                    <MapComponentWithNoSSR countries={countries} />
-                </div>
-            </CardContent>
-        </Card>
+        <div className="h-full w-full">
+            <MapComponentWithNoSSR countries={countries} center={center} />
+        </div>
     );
 }

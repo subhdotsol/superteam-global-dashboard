@@ -1,100 +1,88 @@
 "use client";
 
-import { StatsCards } from "./stats-cards";
-import { CountryLeaderboard } from "./country-leaderboard";
-import { WorldMap } from "./world-map";
-import { BuilderSearch } from "./builder-search";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { DashboardStateProvider, useDashboard } from "./dashboard-state-provider";
+import { OverviewLayout } from "./overview-layout";
+import { CountryView } from "./country-view";
+import { ProfileDrawer } from "./profile-drawer";
 import { DashboardStats } from "@/lib/types";
-import { Globe, ArrowLeft } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import dashboardBg from "@/images/dashboard.png";
 
 interface MainDashboardProps {
     stats: DashboardStats;
     regionFilter?: string;
 }
 
+// Inner component to consume the context
+function DashboardShell({ stats }: { stats: DashboardStats }) {
+    const { currentView } = useDashboard();
+
+    return (
+        <div className="min-h-screen relative font-sans p-4 md:p-8 transition-colors overflow-hidden">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+                <Image
+                    src={dashboardBg}
+                    alt="Dashboard Background"
+                    fill
+                    className="object-cover"
+                    quality={100}
+                    priority
+                    placeholder="blur"
+                />
+                {/* Optional overlay for better text readability if needed, but per request just the image for now */}
+                <div className="absolute inset-0 bg-black/50" />
+            </div>
+
+            {/* Content Container */}
+            <div className="relative z-10 min-h-screen flex flex-col">
+                {/* Top Bar - Simplified */}
+                <header className="flex flex-col gap-4 mb-8 max-w-[1600px] mx-auto w-full">
+                    <div className="flex items-center justify-between">
+                        <Link href="/" className="flex items-center gap-2 group">
+                            <div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black transition-transform group-hover:scale-110">
+                                <ArrowLeft className="w-5 h-5" />
+                            </div>
+                            <span className="font-bold font-handwriting text-xl hidden sm:inline">Back</span>
+                        </Link>
+
+                        <div className="flex items-center gap-4">
+                            <ThemeToggle />
+                        </div>
+                    </div>
+
+                    {/* Data Disclaimer Banner */}
+                    <div className="w-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-sm rounded-xl p-3 flex flex-col sm:flex-row items-center justify-center gap-2 text-center sm:text-left animate-slide-up">
+                        <span className="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded shadow-sm">DEMO DATA</span>
+                        <p className="text-sm text-blue-200">
+                            <span className="font-bold text-white">Real Data:</span> Title, Region, & Public Key.
+                            <span className="mx-2 opacity-50">|</span>
+                            <span className="font-bold text-white">Placeholder:</span> Earnings, Submissions, & Won (Pending integration).
+                        </p>
+                    </div>
+                </header>
+
+                <main className="max-w-[1600px] mx-auto w-full h-full relative">
+                    {currentView === "overview" ? (
+                        <OverviewLayout countries={stats.countries} />
+                    ) : (
+                        <CountryView />
+                    )}
+                </main>
+
+                <ProfileDrawer />
+            </div>
+        </div>
+    );
+}
+
 export function MainDashboard({ stats, regionFilter }: MainDashboardProps) {
     return (
-        <div className="min-h-screen bg-black bg-[radial-gradient(at_0%_0%,_#2e1065_0px,_transparent_50%),radial-gradient(at_100%_0%,_#4c1d95_0px,_transparent_50%),radial-gradient(at_100%_100%,_#2e1065_0px,_transparent_50%),radial-gradient(at_0%_100%,_#4c1d95_0px,_transparent_50%),radial-gradient(at_50%_50%,_#000000_0px,_transparent_50%)]">
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        {regionFilter && (
-                            <Link
-                                href="/"
-                                className="p-2 rounded-lg hover:bg-[var(--muted)] transition-colors"
-                            >
-                                <ArrowLeft className="w-5 h-5" />
-                            </Link>
-                        )}
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
-                            <Globe className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-xl font-bold">
-                                {regionFilter ? `Builders in ${regionFilter}` : "Superteam Global"}
-                            </h1>
-                            <p className="text-xs text-[var(--muted-foreground)]">
-                                {regionFilter ? "Regional View" : "Builder Dashboard"}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">
-                            {stats.totalBuilders.toLocaleString()} builders {regionFilter ? `in ${regionFilter}` : "worldwide"}
-                        </span>
-                        <ThemeToggle />
-                    </div>
-                </div>
-
-                {/* Hero */}
-                <div className="text-center mb-8 animate-fade-in">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-violet-400 to-purple-500 bg-clip-text text-transparent">
-                        Superteam Global Builder Dashboard
-                    </h2>
-                    <p className="text-[var(--muted-foreground)] max-w-xl mx-auto">
-                        Visualize, rank, and celebrate Solana builders across the globe.
-                        Discover the talent layer of Solana.
-                    </p>
-                </div>
-
-                {/* Stats Cards */}
-                <div className="mb-8 animate-slide-up">
-                    <StatsCards stats={stats} />
-                </div>
-
-                {/* World Map */}
-                <div className="mb-8 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-                    <WorldMap countries={stats.countries} />
-                </div>
-
-                {/* Leaderboard and Search */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 animate-slide-up" style={{ animationDelay: "0.2s" }}>
-                        <CountryLeaderboard countries={stats.countries} />
-                    </div>
-                    <div className="animate-slide-up" style={{ animationDelay: "0.3s" }}>
-                        <BuilderSearch countries={stats.countries} />
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <footer className="mt-12 text-center text-sm text-[var(--muted-foreground)]">
-                    <p>
-                        Built for the Solana ecosystem • Inspired by{" "}
-                        <a
-                            href="https://superteam.fun"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-purple-400 hover:underline"
-                        >
-                            Superteam
-                        </a>
-                    </p>
-                </footer>
-            </main>
-        </div>
+        <DashboardStateProvider>
+            <DashboardShell stats={stats} />
+        </DashboardStateProvider>
     );
 }

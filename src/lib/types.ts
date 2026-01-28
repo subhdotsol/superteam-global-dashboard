@@ -2,10 +2,20 @@ export interface Builder {
   title: string;
   wallet: string;
   region: string;
+  role?: string;
+  bio?: string;
+  avatar?: string;
   earned?: number;
   submissions?: number;
   won?: number;
   score?: number;
+  socials?: {
+    twitter?: string;
+    linkedin?: string;
+    github?: string;
+    website?: string;
+  };
+  skills?: string[];
 }
 
 export interface CountryStats {

@@ -1,22 +1,33 @@
 "use client";
 
-import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap } from "react-leaflet";
 import { useTheme } from "next-themes";
 import { CountryStats } from "@/lib/types";
 import { formatNumber, getCountryCode } from "@/lib/utils";
+import { useEffect } from "react";
 
 interface MapComponentProps {
     countries: CountryStats[];
+    center?: [number, number];
 }
 
-export default function MapComponent({ countries }: MapComponentProps) {
+// Sub-component to handle map view updates
+function MapController({ center }: { center?: [number, number] }) {
+    const map = useMap();
+    useEffect(() => {
+        if (center) {
+            map.setView(center, 4, { animate: true });
+        }
+    }, [center, map]);
+    return null;
+}
+
+export default function MapComponent({ countries, center }: MapComponentProps) {
     const { theme } = useTheme();
 
     const getTileLayer = () => {
-        if (theme === "dark") {
-            return "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-        }
-        return "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+        // Always use dark/carto style for this design since dashboard is dark-themed
+        return "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
     };
 
     const getMarkerSize = (builderCount: number): number => {
@@ -37,14 +48,15 @@ export default function MapComponent({ countries }: MapComponentProps) {
 
     return (
         <MapContainer
-            center={[20, 0]}
-            zoom={2}
+            center={center || [20, 0]}
+            zoom={center ? 4 : 2}
             className="h-full w-full"
-            style={{ background: theme === "dark" ? "#1e1b4b" : "#f0f0f0" }}
+            style={{ background: "#050505" }}
             minZoom={1.5}
             maxZoom={6}
             scrollWheelZoom={true}
         >
+            <MapController center={center} />
             <TileLayer
                 url={getTileLayer()}
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -67,7 +79,7 @@ export default function MapComponent({ countries }: MapComponentProps) {
                             }}
                         >
                             <Tooltip>
-                                <div className="p-2 min-w-[150px]">
+                                <div className="p-2 min-w-[150px] text-black">
                                     <div className="flex items-center gap-2 mb-2">
                                         <span className="text-xl">{getFlagEmoji(countryCode)}</span>
                                         <span className="font-semibold">{country.country}</span>

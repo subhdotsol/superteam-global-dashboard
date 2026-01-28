@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MapPin, Globe, Loader2 } from "lucide-react";
 import Image from "next/image";
+import heroImage from "@/images/image.png";
+
+// ... (existing imports)
+
+// Inside LandingPage component
+// ...
+
 import { motion } from "framer-motion";
 
 // Superteam Logo Icon SVG component
@@ -165,12 +172,12 @@ export function LandingPage() {
             <div className="absolute bottom-0 left-0 right-0 z-10">
                 <div className="w-full relative">
                     <Image
-                        src="/images/image.png"
+                        src={heroImage}
                         alt="Superteam platform visualization"
-                        width={1920}
-                        height={1080}
                         className="w-full h-auto object-cover translate-y-[25%]"
                         priority
+                        placeholder="blur"
+                        sizes="100vw"
                     />
                 </div>
             </div>
@@ -224,7 +231,7 @@ export function LandingPage() {
 
                     {/* Subheading */}
                     <motion.p
-                        className="text-white/50 text-center text-sm mb-8 max-w-md"
+                        className="text-white text-center text-sm mb-8 max-w-md"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
