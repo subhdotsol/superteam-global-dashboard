@@ -1,9 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useDashboard } from "./dashboard-state-provider";
 import { WorldMap } from "./world-map";
 import { CountryStats } from "@/lib/types";
-import Image from "next/image";
 
 interface OverviewLayoutProps {
     countries: CountryStats[];
@@ -35,10 +35,29 @@ const COUNTRY_LOGOS: Record<string, string> = {
     "Ireland": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/ireland.png",
     "Spain": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/spain.jpg",
     "Ukraine": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/ukraine.jpg",
+    "Turkey": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/turkey.png",
+    "Vietnam": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/vietnam.png",
+    "Mexico": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/mexico.png",
+    "Philippines": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/philippines.png",
+    "France": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/france.png",
+    "Israel": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/israel.png",
 };
 
 export function OverviewLayout({ countries, defaultCenter }: OverviewLayoutProps) {
     const { selectCountry } = useDashboard();
+    const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+
+    const handleHoverCountry = (country: string | null) => {
+        setHoveredCountry(country);
+    };
+
+    // Check if a tab should be highlighted based on hover
+    const isTabHighlighted = (countryName: string) => {
+        if (!hoveredCountry) return true; // No hover = all visible
+        return countryName.toLowerCase() === hoveredCountry.toLowerCase() ||
+            countryName.toLowerCase().includes(hoveredCountry.toLowerCase()) ||
+            hoveredCountry.toLowerCase().includes(countryName.toLowerCase());
+    };
 
     return (
         <div className="flex flex-col h-[calc(100vh-6rem)] bg-black">
@@ -47,11 +66,16 @@ export function OverviewLayout({ countries, defaultCenter }: OverviewLayoutProps
                 <div className="flex flex-wrap justify-center gap-3">
                     {countries.map((country) => {
                         const logoUrl = COUNTRY_LOGOS[country.country];
+                        const isHighlighted = isTabHighlighted(country.country);
+
                         return (
                             <button
                                 key={country.country}
                                 onClick={() => selectCountry(country)}
-                                className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-lg transition-all hover:scale-105 hover:border-purple-500"
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${isHighlighted
+                                        ? 'bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:scale-105 hover:border-purple-500 opacity-100'
+                                        : 'bg-zinc-900/30 border border-zinc-800/50 opacity-30 scale-95'
+                                    } ${hoveredCountry && isHighlighted ? 'ring-2 ring-yellow-400 scale-110 bg-zinc-800' : ''}`}
                             >
                                 {logoUrl ? (
                                     <img
@@ -74,7 +98,11 @@ export function OverviewLayout({ countries, defaultCenter }: OverviewLayoutProps
 
             {/* Large Map - Takes remaining space */}
             <div className="flex-1 mx-4 mb-4 rounded-2xl overflow-hidden border border-zinc-800">
-                <WorldMap countries={countries} center={defaultCenter} />
+                <WorldMap
+                    countries={countries}
+                    center={defaultCenter}
+                    onHoverCountry={handleHoverCountry}
+                />
             </div>
         </div>
     );
