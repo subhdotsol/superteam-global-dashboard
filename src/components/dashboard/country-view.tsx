@@ -20,7 +20,6 @@ export function CountryView() {
     const filteredBuilders = selectedCountry.builders
         .filter(b => b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             b.role?.toLowerCase().includes(searchQuery.toLowerCase()))
-        // Removing the bad import line if it exists here by replacing the context around it with clean code
         .sort((a, b) => {
             if (activeFilter === "earned") return (b.earned || 0) - (a.earned || 0);
             if (activeFilter === "submission") return (b.submissions || 0) - (a.submissions || 0);
@@ -38,19 +37,22 @@ export function CountryView() {
                 <X className="w-6 h-6" />
             </button>
 
-            {/* Header */}
-            <div className="flex flex-col items-center mb-10 mt-4">
-                <div className="mb-4 shadow-lg transform -rotate-2">
-                    <div className="relative w-24 h-16 bg-zinc-200 overflow-hidden rounded border border-zinc-300">
-                        <img
-                            src={`https://flagcdn.com/w160/${selectedCountry.countryCode.toLowerCase()}.png`}
-                            alt={selectedCountry.country}
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
+            {/* Header - Side by Side Layout */}
+            <div className="flex items-center gap-6 mb-10 mt-4">
+                {/* Flag */}
+                <div className="relative w-20 h-14 shadow-md rounded overflow-hidden border border-zinc-300">
+                    <img
+                        src={`https://flagcdn.com/w160/${selectedCountry.countryCode.toLowerCase()}.png`}
+                        alt={selectedCountry.country}
+                        className="w-full h-full object-cover"
+                    />
                 </div>
-                <h2 className="text-4xl font-bold font-handwriting mb-1">{selectedCountry.country}</h2>
-                <p className="text-lg font-handwriting">{selectedCountry.builderCount} superteam members</p>
+
+                {/* Text Info */}
+                <div className="flex flex-col">
+                    <h2 className="text-4xl font-bold font-handwriting leading-tight">{selectedCountry.country}</h2>
+                    <p className="text-xl font-handwriting opacity-80">{selectedCountry.builderCount} superteam members</p>
+                </div>
             </div>
 
             {/* Controls */}
@@ -83,15 +85,17 @@ export function CountryView() {
                         {isFilterOpen && typeof document !== "undefined" && createPortal(
                             <>
                                 <motion.div
+                                    key="filter-backdrop"
                                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                                     className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
                                     onClick={() => setIsFilterOpen(false)}
                                 />
                                 <motion.div
+                                    key="filter-modal"
                                     initial={{ opacity: 0, scale: 0.9, y: "-50%", x: "-50%" }}
                                     animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}
                                     exit={{ opacity: 0, scale: 0.9, y: "-50%", x: "-50%" }}
-                                    className="fixed top-1/2 left-1/2 z-[101] bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-xl border-2 border-black w-80 max-w-full"
+                                    className="fixed top-1/2 left-1/2 z-[101] bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-xl border-2 border-black w-80 max-w-full pointer-events-auto"
                                 >
                                     <h3 className="font-bold text-xl mb-4 text-center">Sort By</h3>
                                     <div className="space-y-2">

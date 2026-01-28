@@ -8,14 +8,14 @@ import Image from "next/image";
 export function ProfileDrawer() {
     const { selectedMember, selectMember } = useDashboard();
 
-    if (!selectedMember) return null;
-
+    // AnimatePresence needs to always render to detect exit
     return (
         <AnimatePresence>
             {selectedMember && (
                 <>
                     {/* Backdrop */}
                     <motion.div
+                        key="profile-backdrop"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -93,32 +93,36 @@ export function ProfileDrawer() {
                                             </div>
                                         </div>
 
-                                        {/* Socials & Wallet */}
-                                        <div className="flex flex-wrap items-center gap-4 mb-8">
+                                        {/* Socials Row */}
+                                        <div className="flex flex-wrap items-center gap-4 mb-6">
                                             {selectedMember.socials?.twitter && (
                                                 <a href={selectedMember.socials.twitter} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
-                                                    <Twitter className="w-5 h-5" />
+                                                    <Twitter className="w-6 h-6" />
                                                 </a>
                                             )}
                                             {selectedMember.socials?.linkedin && (
                                                 <a href={selectedMember.socials.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
-                                                    <Linkedin className="w-5 h-5" />
+                                                    <Linkedin className="w-6 h-6" />
                                                 </a>
                                             )}
                                             {selectedMember.socials?.github && (
                                                 <a href={selectedMember.socials.github} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
-                                                    <Github className="w-5 h-5" />
+                                                    <Github className="w-6 h-6" />
                                                 </a>
                                             )}
                                             {selectedMember.socials?.website && (
                                                 <a href={selectedMember.socials.website} target="_blank" rel="noopener noreferrer" className="p-2 text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
-                                                    <Globe className="w-5 h-5" />
+                                                    <Globe className="w-6 h-6" />
                                                 </a>
                                             )}
+                                        </div>
 
-                                            <div className="ml-auto md:ml-4 text-xs font-mono bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full flex items-center gap-2 text-zinc-500">
-                                                {selectedMember.wallet.substring(0, 4)}...{selectedMember.wallet.substring(selectedMember.wallet.length - 4)}
-                                                <Copy className="w-3 h-3 cursor-pointer hover:text-black" />
+                                        {/* Wallet Address - Separate Line */}
+                                        <div className="mb-8">
+                                            <div className="inline-flex items-center gap-3 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-zinc-300 font-mono text-sm border border-zinc-200 dark:border-zinc-700">
+                                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                                {selectedMember.wallet}
+                                                <Copy className="w-4 h-4 cursor-pointer hover:text-black dark:hover:text-white ml-2" />
                                             </div>
                                         </div>
 
