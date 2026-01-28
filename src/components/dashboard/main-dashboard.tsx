@@ -42,11 +42,10 @@ function DashboardShell({ stats }: { stats: DashboardStats }) {
                 {/* Top Bar - Simplified */}
                 <header className="flex flex-col gap-4 mb-8 max-w-[1600px] mx-auto w-full">
                     <div className="flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2 group">
-                            <div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black transition-transform group-hover:scale-110">
+                        <Link href="/" className="flex items-center group">
+                            <div className="w-10 h-10 rounded-full border border-white/50 flex items-center justify-center text-white transition-all group-hover:bg-white/10 group-hover:scale-110">
                                 <ArrowLeft className="w-5 h-5" />
                             </div>
-                            <span className="font-bold font-handwriting text-xl hidden sm:inline">Back</span>
                         </Link>
 
                         <div className="flex items-center gap-4">
@@ -54,14 +53,12 @@ function DashboardShell({ stats }: { stats: DashboardStats }) {
                         </div>
                     </div>
 
-                    {/* Data Disclaimer Banner */}
-                    <div className="w-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-sm rounded-xl p-3 flex flex-col sm:flex-row items-center justify-center gap-2 text-center sm:text-left animate-slide-up">
-                        <span className="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded shadow-sm">DEMO DATA</span>
-                        <p className="text-sm text-blue-200">
-                            <span className="font-bold text-white">Real Data:</span> Title, Region, & Public Key.
-                            <span className="mx-2 opacity-50">|</span>
-                            <span className="font-bold text-white">Placeholder:</span> Earnings, Submissions, & Won (Pending integration).
-                        </p>
+                    {/* Data Disclaimer Banner - Pill Style */}
+                    <div className="w-full flex justify-center animate-slide-up">
+                        <div className="bg-gradient-to-r from-[#9d5cff] via-[#d667ae] to-[#ff8c7f] text-black px-5 py-2 rounded-full font-semibold shadow-lg flex items-center gap-2 text-sm">
+                            <span>✨</span>
+                            <span>$10.5M seed round raised</span>
+                        </div>
                     </div>
                 </header>
 

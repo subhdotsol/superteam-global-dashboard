@@ -28,11 +28,11 @@ export function CountryView() {
         });
 
     return (
-        <div className="w-full h-full flex flex-col animate-fade-in bg-white dark:bg-zinc-950 rounded-[2rem] border-4 border-black dark:border-zinc-800 overflow-hidden relative p-8 max-w-[1600px] mx-auto">
+        <div className="w-full h-full flex flex-col animate-fade-in bg-black/40 backdrop-blur-sm rounded-[2rem] border border-white/20 overflow-hidden relative p-8 max-w-[1600px] mx-auto text-white">
             {/* Close Button */}
             <button
                 onClick={goBackToOverview}
-                className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border-2 border-black rounded-lg hover:bg-zinc-100 transition-colors z-10"
+                className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-white/50 rounded-lg hover:bg-white/10 transition-colors z-10 text-white"
             >
                 <X className="w-6 h-6" />
             </button>

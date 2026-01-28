@@ -28,31 +28,26 @@ export function MemberCard({ member }: MemberCardProps) {
                 )}
             </div>
 
-            <div className="px-5 pb-5 flex-1 flex flex-col pt-0 transform -translate-y-8">
-                {/* Avatar */}
-                <div className="flex justify-between items-end mb-3">
+            <div className="px-5 pb-5 flex-1 flex flex-col pt-0 transform -translate-y-12">
+                {/* Avatar - Bigger */}
+                <div className="flex justify-start items-end mb-3">
                     <div className="relative">
-                        <div className="w-16 h-16 rounded-full border-4 border-white dark:border-zinc-900 overflow-hidden bg-zinc-100">
+                        <div className="w-24 h-24 rounded-full border-4 border-white dark:border-zinc-900 overflow-hidden bg-zinc-100 shadow-lg">
                             {member.avatar ? (
                                 <Image
                                     src={member.avatar}
                                     alt={member.title}
-                                    width={64}
-                                    height={64}
+                                    width={96}
+                                    height={96}
                                     className="object-cover w-full h-full"
                                 />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-zinc-200 text-zinc-400 text-xl font-bold">
+                                <div className="w-full h-full flex items-center justify-center bg-zinc-200 text-zinc-400 text-2xl font-bold">
                                     {member.title.charAt(0)}
                                 </div>
                             )}
                         </div>
                     </div>
-
-                    {/* QR Code / Share Icon placeholder */}
-                    <button className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-black dark:hover:text-white transition-colors mb-4">
-                        <span className="text-xs font-bold">qr</span>
-                    </button>
                 </div>
 
                 {/* Info */}
@@ -61,25 +56,25 @@ export function MemberCard({ member }: MemberCardProps) {
                     <p className="text-sm text-zinc-300">{member.role || "Member"}</p>
                 </div>
 
-                {/* Stats Row */}
+                {/* Stats Row - Earned, Submissions, Won */}
                 <div className="grid grid-cols-3 gap-2 mb-6">
                     <div className="flex flex-col">
-                        <div className="flex items-center gap-1 text-yellow-500 mb-0.5">
-                            <span className="text-xs font-bold">★ 5.0</span>
-                        </div>
-                        <span className="text-[10px] text-zinc-400 uppercase tracking-wide">Rating</span>
-                    </div>
-                    <div className="flex flex-col">
-                        <div className="flex items-center gap-1 text-blue-500 mb-0.5">
+                        <div className="flex items-center gap-1 text-green-400 mb-0.5">
                             <span className="text-xs font-bold">$ {member.earned?.toLocaleString() || "0"}</span>
                         </div>
                         <span className="text-[10px] text-zinc-400 uppercase tracking-wide">Earned</span>
                     </div>
                     <div className="flex flex-col">
-                        <div className="flex items-center gap-1 text-purple-500 mb-0.5">
+                        <div className="flex items-center gap-1 text-blue-400 mb-0.5">
                             <span className="text-xs font-bold">{member.submissions || 0}</span>
                         </div>
                         <span className="text-[10px] text-zinc-400 uppercase tracking-wide">Submissions</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-1 text-yellow-400 mb-0.5">
+                            <span className="text-xs font-bold">{member.won || 0}</span>
+                        </div>
+                        <span className="text-[10px] text-zinc-400 uppercase tracking-wide">Won</span>
                     </div>
                 </div>
 
