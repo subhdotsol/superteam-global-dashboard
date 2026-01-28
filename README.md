@@ -1,36 +1,217 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 Superteam Global Builder Dashboard (Solana)
 
-## Getting Started
+A public dashboard to visualize, rank, and celebrate **Solana builders across the globe**.
 
-First, run the development server:
+This project focuses on:
+- 🌎 Geographic distribution of builders
+- 🏆 Country & region leaderboards
+- ⭐ Contribution-based rankings
+- 🔍 Builder discovery
+- 😅 Friendly internal competition between Superteam chapters
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ✨ Why this exists
+
+Superteam is a global, community-driven ecosystem — but its impact is fragmented across regions.
+
+This dashboard aims to:
+- Make Superteam’s global builder footprint visible
+- Encourage healthy competition between countries & chapters
+- Recognize top contributors publicly
+- Serve as a future internal tool for country leads
+
+---
+
+## 🧱 Data Model (MVP)
+
+The project is intentionally **scrappy-first**.  
+We launch with partial data and enrich over time.
+
+### Core CSV Schema (v1)
+
+```csv
+wallet,
+display_name,
+title,
+country,
+country_code,
+earned,
+submissions,
+won,
+score
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Column details
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Column         | Description                             |
+| -------------- | --------------------------------------- |
+| `wallet`       | Unique identifier for the builder       |
+| `display_name` | Builder name or handle                  |
+| `title`        | Role (dev, designer, writer, etc.)      |
+| `country`      | Builder’s country                       |
+| `country_code` | ISO country code (derived from country) |
+| `earned`       | Total earnings from bounties / grants   |
+| `submissions`  | Number of submissions made              |
+| `won`          | Number of wins                          |
+| `score`        | Derived contribution score              |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Fields like `chapter`, `profile_url`, and `points` are intentionally optional and will be added later once access is available.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ⭐ Scoring System
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Inspired by Talent Protocol points, but tailored for Superteam & Solana.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### v1 Scoring Formula
 
-## Deploy on Vercel
+```text
+score =
+  (won * 50)
++ (submissions * 10)
++ (earned * 0.01)
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Rationale
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* 🏆 Wins matter most
+* 🧪 Effort is rewarded
+* 💰 Earnings count, but don’t dominate
+
+The formula is configurable and can evolve without breaking the UI.
+
+---
+
+## 🏆 Leaderboards & Rankings
+
+### Country-level
+
+* Total builders per country
+* Country ranking by:
+  * Builder count
+  * Total score
+* Top builder per country
+
+### Region-level
+
+* Aggregate score by region
+* Region vs region comparison
+
+### Builder-level
+
+* Overall rank (by score)
+* Country rank (derived)
+* Metric-specific leaderboards:
+  * Most wins
+  * Most submissions
+  * Highest earnings
+
+---
+
+## 🗺️ Map & Discovery
+
+* World map shaded by builder count
+* Click a country to:
+  * View total builders
+  * See rankings
+  * Discover builders from that country
+
+This turns the dashboard into a **discovery tool**, not just stats.
+
+---
+
+## 🧩 Handling Missing Data (Important)
+
+This project launches **before full access** to all Superteam data.
+
+### Principles:
+
+* Missing data ≠ bad builder
+* No “0 earned” shaming
+* Graceful fallbacks everywhere
+
+### UX behavior:
+
+* Show “Stats coming soon”
+* Encourage “Claim your profile” (future)
+* Rank by builder count when scores are unavailable
+
+---
+
+## 🚀 Launch Philosophy
+
+This project intentionally:
+
+* Ships early
+* Improves iteratively
+* Prioritizes visibility over perfection
+
+We prioritize being:
+
+* Simple
+* Visual
+* Social-first
+* Slightly incomplete, but confident
+
+This dashboard follows this philosophy.
+
+---
+
+## 🛣️ Roadmap
+
+### Phase 1 (Current)
+
+* CSV-based ingestion
+* Country & region leaderboards
+* Score-based rankings
+* Public map & discovery
+
+### Phase 2
+
+* Builder profile pages
+* Chapter-based leaderboards
+* Claim-your-profile flow
+* Profile verification
+
+### Phase 3
+
+* Auto-sync from Superteam bounties
+* GitHub & onchain signals
+* Time-based seasons
+* Internal dashboards for country leads
+
+---
+
+## 🤝 Transparency
+
+All data used in v1 is:
+
+* Public
+* Curated
+* Subject to correction
+
+Builders will be able to claim and update profiles in future versions.
+
+---
+
+## 🫡 Credits & Inspiration
+
+Inspired by:
+
+* Talent Protocol’s identity & scoring model
+* Superteam’s global community ethos
+
+Built for the Solana ecosystem.
+
+---
+
+## 📬 Feedback
+
+If you’re a builder, chapter lead, or Superteam contributor:
+
+* Feedback is welcome
+* Corrections are encouraged
+* Contributions are appreciated
+
+Let’s make Superteam’s global impact visible 🌍

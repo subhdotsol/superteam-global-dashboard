@@ -16,7 +16,7 @@ interface MainDashboardProps {
 
 export function MainDashboard({ stats, regionFilter }: MainDashboardProps) {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-black via-[#2e1065] to-black">
+        <div className="min-h-screen bg-black bg-[radial-gradient(at_0%_0%,_#2e1065_0px,_transparent_50%),radial-gradient(at_100%_0%,_#4c1d95_0px,_transparent_50%),radial-gradient(at_100%_100%,_#2e1065_0px,_transparent_50%),radial-gradient(at_0%_100%,_#4c1d95_0px,_transparent_50%),radial-gradient(at_50%_50%,_#000000_0px,_transparent_50%)]">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
