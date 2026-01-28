@@ -3,88 +3,78 @@
 import { useDashboard } from "./dashboard-state-provider";
 import { WorldMap } from "./world-map";
 import { CountryStats } from "@/lib/types";
-import { motion } from "framer-motion";
-import { Calendar } from "lucide-react";
+import Image from "next/image";
 
-// Update OverviewLayout to accept defaultCenter and apply new styles
 interface OverviewLayoutProps {
     countries: CountryStats[];
     defaultCenter?: [number, number];
 }
 
+// Country logo mapping with correct extensions
+const COUNTRY_LOGOS: Record<string, string> = {
+    "India": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/india.jpg",
+    "Germany": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/germany.jpg",
+    "Nigeria": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/nigeria.png",
+    "Brazil": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/brazil.png",
+    "Kazakhstan": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/kazakhstan.png",
+    "Malaysia": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/malaysia.png",
+    "Balkan": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/balkan.png",
+    "South Korea": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/korea.png",
+    "Korea": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/korea.png",
+    "Canada": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/canada.png",
+    "Singapore": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/singapore.png",
+    "Poland": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/poland.png",
+    "Indonesia": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/indonesia.png",
+    "Netherlands": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/netherlands.jpg",
+    "Japan": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/japan.png",
+    "UK": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/uk.png",
+    "United Kingdom": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/uk.png",
+    "UAE": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/uae.png",
+    "United Arab Emirates": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/uae.png",
+    "Georgia": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/georgia.png",
+    "Ireland": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/ireland.png",
+    "Spain": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/spain.jpg",
+    "Ukraine": "https://res.cloudinary.com/dgvnuwspr/image/upload/assets/superteams/logos/ukraine.jpg",
+};
+
 export function OverviewLayout({ countries, defaultCenter }: OverviewLayoutProps) {
     const { selectCountry } = useDashboard();
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
-            {/* Left Panel: Leaderboard & Events */}
-            <div className="lg:col-span-1 flex flex-col gap-6 h-full overflow-hidden">
-                {/* Leaderboard Card - Glassmorphism */}
-                <div className="flex-1 bg-black/20 backdrop-blur-md rounded-[2rem] border-4 border-white/10 p-6 flex flex-col overflow-hidden text-white">
-                    <h3 className="text-xl font-bold font-handwriting mb-4">Leader board by countries</h3>
-
-                    <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                        {countries.map((country, idx) => (
-                            <div
+        <div className="flex flex-col h-[calc(100vh-6rem)] bg-black">
+            {/* Country Tabs - Horizontal scrollable */}
+            <div className="px-4 py-6">
+                <div className="flex flex-wrap justify-center gap-3">
+                    {countries.map((country) => {
+                        const logoUrl = COUNTRY_LOGOS[country.country];
+                        return (
+                            <button
                                 key={country.country}
                                 onClick={() => selectCountry(country)}
-                                className="group cursor-pointer p-4 rounded-xl border border-white/10 hover:bg-black/40 hover:border-white/30 transition-all flex items-center justify-between bg-black/20"
+                                className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-lg transition-all hover:scale-105 hover:border-purple-500"
                             >
-                                <div>
-                                    <div className="font-bold text-lg group-hover:underline decoration-wavy">
-                                        {country.country} #{idx + 1}
+                                {logoUrl ? (
+                                    <img
+                                        src={logoUrl}
+                                        alt={country.country}
+                                        className="w-8 h-8 rounded object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-8 h-8 rounded bg-purple-600 flex items-center justify-center text-white font-bold text-xs">
+                                        {country.country.substring(0, 2).toUpperCase()}
                                     </div>
-                                    <div className="text-sm opacity-70 font-handwriting">
-                                        member count - {country.builderCount}
-                                    </div>
-                                </div>
-                                <div className="text-2xl opacity-50 group-hover:opacity-100">
-                                    →
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="mt-4 pt-4 border-t-2 border-dashed border-white/20 text-center font-handwriting font-bold cursor-pointer hover:text-purple-400">
-                        ... View more
-                    </div>
-                </div>
-
-                {/* Event Card (Friendship Day) - Keeping structure, adding border/glass adjustment if needed, but matched existing black style */}
-                <div className="h-48 bg-black text-white rounded-[2rem] p-6 flex items-center relative overflow-hidden shrink-0 group cursor-pointer hover:scale-[1.02] transition-transform border border-white/10">
-                    {/* Decorative circles/shapes */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-800 rounded-full blur-2xl opacity-50 translate-x-10 -translate-y-10"></div>
-
-                    <div className="flex gap-4 relative z-10 w-full">
-                        {/* Icon/Image Placeholder */}
-                        <div className="w-20 h-full flex flex-col justify-center">
-                            <div className="rounded-full border-2 border-white w-12 h-12 flex items-center justify-center mb-2">
-                                <span className="text-2xl">🕊️</span>
-                            </div>
-                        </div>
-
-                        <div className="flex-1">
-                            <div className="text-xs uppercase tracking-wider text-zinc-400 mb-1">Upcoming Event</div>
-                            <h4 className="text-lg font-bold mb-2 leading-tight">Happy Friendship Day!</h4>
-                            <p className="text-xs text-zinc-400 mb-3">Today is the perfect time to celebrate the good people in your life.</p>
-
-                            <div className="inline-block px-3 py-1 rounded-full border border-zinc-600 text-xs">
-                                in 1 week
-                            </div>
-                        </div>
-                    </div>
+                                )}
+                                <span className="text-white font-medium">{country.country}</span>
+                                <span className="text-zinc-400 text-sm">({country.builderCount})</span>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
-            {/* Right Panel: Map - Glassmorphism and full height */}
-            <div className="lg:col-span-2 bg-black/20 backdrop-blur-md rounded-[2rem] border-4 border-white/10 p-0 overflow-hidden flex flex-col relative text-white">
-                <div className="absolute top-6 left-0 right-0 text-center z-10 pointer-events-none">
-                    <h2 className="text-3xl font-bold font-handwriting text-white drop-shadow-md">map</h2>
-                </div>
-
-                <div className="flex-1 overflow-hidden relative">
-                    <WorldMap countries={countries} center={defaultCenter} />
-                </div>
+            {/* Large Map - Takes remaining space */}
+            <div className="flex-1 mx-4 mb-4 rounded-2xl overflow-hidden border border-zinc-800">
+                <WorldMap countries={countries} center={defaultCenter} />
             </div>
         </div>
     );
